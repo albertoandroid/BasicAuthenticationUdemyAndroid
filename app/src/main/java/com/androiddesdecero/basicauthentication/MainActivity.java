@@ -79,6 +79,53 @@ public class MainActivity extends AppCompatActivity {
                 solicitudAutenticadoUserHash();
             }
         });
+
+        etUserName = findViewById(R.id.etUserName);
+        etPassword = findViewById(R.id.etPassword);
+        btUserWithHeaderandHashUserPassword = findViewById(R.id.btUserWithHeaderandHashUserPassword);
+        btUserWithHeaderandHashUserPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitudAutenticadoUserHashEditText();
+            }
+        });
+    }
+
+    private void solicitudAutenticadoUserHashEditText(){
+        String passwordHash = encrypPassword(etPassword.getText().toString());
+        String userName = etUserName.getText().toString();
+        String userPassord = userName + ":" + passwordHash;
+        String authHeader = "Basic " + Base64.encodeToString((userPassord).getBytes(), Base64.NO_WRAP);
+
+        Call<List<ProfesorBA>> call = WebServiceBA
+                .getInstance()
+                .createService(WebServiceApi.class)
+                .listAllProfessorUser(authHeader);
+
+        call.enqueue(new Callback<List<ProfesorBA>>() {
+            @Override
+            public void onResponse(Call<List<ProfesorBA>> call, Response<List<ProfesorBA>> response) {
+                if(response.code()==200){
+                    for(int i=0; i<response.body().size(); i++){
+                        Log.d("TAG1", "Nombre Profesor: " + response.body().get(i).getName()
+                                + " Salario: " + response.body().get(i).getSalary()
+                                + " ID: " + response.body().get(i).getId()
+                        );
+                    }
+                }else if(response.code()==204){
+                    Log.d("TAG1", "No hay profesores");
+                }else if(response.code()==403){
+                    Log.d("TAG1", "Forbidden: No tienes permiso para el recurso");
+                }else if(response.code()==401){
+                    Log.d("TAG1", "No Autorizado: No existe usuario");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfesorBA>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void solicitudAutenticadoUserHash(){
