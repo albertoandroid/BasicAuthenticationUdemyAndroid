@@ -18,4 +18,7 @@ public interface WebServiceApi {
 
     @GET("/todos_profesores_admin")
     Call<List<ProfesorBA>> listAllProfessorAdmin();
+
+    @GET("/todos_profesores_user")
+    Call<List<ProfesorBA>> listAllProfessorUser();
 }

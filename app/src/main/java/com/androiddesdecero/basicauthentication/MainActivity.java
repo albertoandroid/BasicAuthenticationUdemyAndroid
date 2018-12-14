@@ -53,6 +53,46 @@ public class MainActivity extends AppCompatActivity {
                 solicitudAutenticadoAdmin();
             }
         });
+
+        btUser = findViewById(R.id.btUser);
+        btUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitudAutenicadoUser();
+            }
+        });
+    }
+
+    private void solicitudAutenicadoUser(){
+        Call<List<ProfesorBA>> call = WebServiceBA
+                .getInstance()
+                .createService(WebServiceApi.class)
+                .listAllProfessorUser();
+
+        call.enqueue(new Callback<List<ProfesorBA>>() {
+            @Override
+            public void onResponse(Call<List<ProfesorBA>> call, Response<List<ProfesorBA>> response) {
+                if(response.code()==200){
+                    for(int i=0; i<response.body().size(); i++){
+                        Log.d("TAG1", "Nombre Profesor: " + response.body().get(i).getName()
+                                + " Salario: " + response.body().get(i).getSalary()
+                                + " ID: " + response.body().get(i).getId()
+                        );
+                    }
+                }else if(response.code()==204){
+                    Log.d("TAG1", "No hay profesores");
+                }else if(response.code()==403){
+                    Log.d("TAG1", "Forbidden: No tienes permiso para el recurso");
+                }else if(response.code()==401){
+                    Log.d("TAG1", "No Autorizado: No existe usuario");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfesorBA>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void solicitudAutenticadoAdmin(){

@@ -25,7 +25,8 @@ public class WebServiceBA {
     private HttpLoggingInterceptor loggingInterceptor;
     private OkHttpClient.Builder httpClientBuilder;
 
-    private static final String AUTH_ADMIN = "Basic " + Base64.encodeToString(("alberto:alberto1").getBytes(), Base64.NO_WRAP);
+    private static final String AUTH_ADMIN = "Basic " + Base64.encodeToString(("alberto:alberto").getBytes(), Base64.NO_WRAP);
+    private static final String AUTH_USER = "Basic " + Base64.encodeToString(("user:b14361404c078ffd549c03db443c3fede2f3e534d73f78f77301ed97d4a436a9fd9db05ee8b325c0ad36438b43fec8510c204fc1c1edb21d0941c00e9e2c1ce2").getBytes(), Base64.NO_WRAP);
 
     private WebServiceBA(){
         loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -37,7 +38,7 @@ public class WebServiceBA {
 
                 Request original = chain.request();
                 Request.Builder requestBuild = original.newBuilder()
-                        .addHeader("Authorization", AUTH_ADMIN)
+                        .addHeader("Authorization", AUTH_USER)
                         .method(original.method(), original.body());
 
                 Request request = requestBuild.build();
