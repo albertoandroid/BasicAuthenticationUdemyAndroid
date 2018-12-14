@@ -2,12 +2,76 @@ package com.androiddesdecero.basicauthentication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.androiddesdecero.basicauthentication.api.WebServiceApi;
+import com.androiddesdecero.basicauthentication.api.WebServiceBA;
+import com.androiddesdecero.basicauthentication.model.ProfesorBA;
+
+import java.security.MessageDigest;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private MessageDigest md;
+    private Button btPublico;
+    private Button btUser;
+    private Button btAdmin;
+    private Button btAdminWithHeader;
+    private Button btUserWithHeaderandHash;
+    private Button btUserWithHeaderandHashUserPassword;
+    private EditText etUserName;
+    private EditText etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setUpView();
+    }
+
+    private void setUpView(){
+        btPublico = findViewById(R.id.btPublico);
+        btPublico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitudSinAutenticar();
+            }
+        });
+    }
+
+    private void solicitudSinAutenticar(){
+        Call<List<ProfesorBA>> call = WebServiceBA
+                .getInstance()
+                .createService(WebServiceApi.class)
+                .listAllPorfessorPublic();
+
+        call.enqueue(new Callback<List<ProfesorBA>>() {
+            @Override
+            public void onResponse(Call<List<ProfesorBA>> call, Response<List<ProfesorBA>> response) {
+                if(response.code()==200){
+                    for(int i=0; i<response.body().size(); i++){
+                        Log.d("TAG1", "Nombre Profesor: " + response.body().get(i).getName()
+                                + " Salario: " + response.body().get(i).getSalary()
+                                + " ID: " + response.body().get(i).getId()
+                        );
+                    }
+                }else if(response.code()==204){
+                    Log.d("TAG1", "No hay profesores");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfesorBA>> call, Throwable t) {
+
+            }
+        });
     }
 }
