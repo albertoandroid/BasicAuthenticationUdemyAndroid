@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btPublico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin autenticar" />
+
+    <Button
+        android:id="@+id/btUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autenticado como User" />
+
+    <Button
+        android:id="@+id/btAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autenticado como Admin" />
+
+    <Button
+        android:id="@+id/btAdminWithHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autenticado como Admin y Etiqueta Header" />
+
+    <Button
+        android:id="@+id/btUserWithHeaderandHash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autenticado como User y Etiqueta Header y Hash" />
+
+    <EditText
+        android:id="@+id/etUserName"
+        android:hint="username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:hint="password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btUserWithHeaderandHashUserPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Autenticado como User y Etiqueta Header y Hash" />
+
+</LinearLayout>
+
+
