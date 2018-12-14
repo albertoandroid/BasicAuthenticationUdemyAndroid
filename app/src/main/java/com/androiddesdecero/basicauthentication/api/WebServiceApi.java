@@ -25,4 +25,7 @@ public interface WebServiceApi {
 
     @GET("/todos_profesores_admin")
     Call<List<ProfesorBA>> listAllProfessorAdmin(@Header("Authorization")String authHeader);
+
+    @GET("/todos_profesores_user")
+    Call<List<ProfesorBA>> listAllProfessorUser(@Header("Authorization")String authHeader);
 }

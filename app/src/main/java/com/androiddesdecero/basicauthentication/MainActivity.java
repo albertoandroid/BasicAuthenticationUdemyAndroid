@@ -12,7 +12,9 @@ import com.androiddesdecero.basicauthentication.api.WebServiceApi;
 import com.androiddesdecero.basicauthentication.api.WebServiceBA;
 import com.androiddesdecero.basicauthentication.model.ProfesorBA;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -68,6 +70,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 solicitudAutenticationAdminWithHeader();
+            }
+        });
+        btUserWithHeaderandHash = findViewById(R.id.btUserWithHeaderandHash);
+        btUserWithHeaderandHash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitudAutenticadoUserHash();
+            }
+        });
+    }
+
+    private void solicitudAutenticadoUserHash(){
+
+        String passwordHash = encrypPassword("user");
+        Log.d("TAG1", passwordHash);
+        String userPassord = "user:" + passwordHash;
+        String authHeader = "Basic " + Base64.encodeToString((userPassord).getBytes(), Base64.NO_WRAP);
+
+        Call<List<ProfesorBA>> call = WebServiceBA
+                .getInstance()
+                .createService(WebServiceApi.class)
+                .listAllProfessorUser(authHeader);
+
+        call.enqueue(new Callback<List<ProfesorBA>>() {
+            @Override
+            public void onResponse(Call<List<ProfesorBA>> call, Response<List<ProfesorBA>> response) {
+                if(response.code()==200){
+                    for(int i=0; i<response.body().size(); i++){
+                        Log.d("TAG1", "Nombre Profesor: " + response.body().get(i).getName()
+                                + " Salario: " + response.body().get(i).getSalary()
+                                + " ID: " + response.body().get(i).getId()
+                        );
+                    }
+                }else if(response.code()==204){
+                    Log.d("TAG1", "No hay profesores");
+                }else if(response.code()==403){
+                    Log.d("TAG1", "Forbidden: No tienes permiso para el recurso");
+                }else if(response.code()==401){
+                    Log.d("TAG1", "No Autorizado: No existe usuario");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProfesorBA>> call, Throwable t) {
+
             }
         });
     }
@@ -196,5 +243,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String encrypPassword(String password){
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            byte[] messageDigest = md.digest(password.getBytes());
+            BigInteger bigInteger = new BigInteger(1, messageDigest);
+            String hashPassword = bigInteger.toString(16);
+            while (hashPassword.length()<32){
+                hashPassword = "0" + hashPassword;
+            }
+            return hashPassword;
+
+        }catch (NoSuchAlgorithmException e){
+            throw new RuntimeException(e);
+        }
     }
 }
